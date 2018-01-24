@@ -37,6 +37,19 @@ type (
 		UpdateUser(ID UserID, user *User) error
 		DeleteUser(ID UserID) error
 	}
+
+	// TokenData represents the data embedded in a JWT token.
+	TokenData struct {
+		ID       UserID
+		Username string
+		Role     UserRole
+	}
+
+	// JWTService represents a service for managing JWT tokens.
+	JWTService interface {
+		GenerateToken(data *TokenData) (string, error)
+		ParseAndVerifyToken(token string) (*TokenData, error)
+	}
 )
 
 const (

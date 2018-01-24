@@ -4,16 +4,15 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gotoolkit/cloudnativego/pkg/cloudnativego"
-
 	"github.com/gin-gonic/gin"
+	"github.com/gotoolkit/cloudnativego/pkg/cloudnativego"
 )
 
 type UserHandler struct {
 	UserService cloudnativego.UserService
 }
 
-func NewUserHandler(rg *gin.RouterGroup) *UserHandler {
+func NewUser(rg *gin.RouterGroup) *UserHandler {
 	h := &UserHandler{}
 
 	rg.POST("/", h.createUser)
@@ -30,12 +29,12 @@ func (handler *UserHandler) createUser(c *gin.Context) {
 	var user cloudnativego.User
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 	err = handler.UserService.CreateUser(&user)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "User item created successfully!", "resourceId": user.ID})
@@ -47,7 +46,7 @@ func (handler *UserHandler) fetchAllUser(c *gin.Context) {
 
 	users, err := handler.UserService.Users()
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 
@@ -65,7 +64,7 @@ func (handler *UserHandler) fetchSingleUser(c *gin.Context) {
 	userID, err := strconv.Atoi(c.Param("id"))
 	user, err := handler.UserService.User(cloudnativego.UserID(userID))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 
@@ -83,7 +82,7 @@ func (handler *UserHandler) updateUser(c *gin.Context) {
 	userID, err := strconv.Atoi(c.Param("id"))
 	user, err := handler.UserService.User(cloudnativego.UserID(userID))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 
@@ -94,12 +93,12 @@ func (handler *UserHandler) updateUser(c *gin.Context) {
 	var inputUser cloudnativego.User
 	err = c.ShouldBindJSON(&inputUser)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 	err = handler.UserService.UpdateUser(user.ID, &inputUser)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "User updated successfully!"})
@@ -111,7 +110,7 @@ func (handler *UserHandler) deleteUser(c *gin.Context) {
 
 	user, err := handler.UserService.User(cloudnativego.UserID(userID))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 	if user.ID == 0 {
@@ -121,7 +120,7 @@ func (handler *UserHandler) deleteUser(c *gin.Context) {
 
 	err = handler.UserService.DeleteUser(cloudnativego.UserID(userID))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "User deleted successfully!"})

@@ -2,6 +2,7 @@ package cloudnativego
 
 // General errors.
 const (
+	ErrUnauthorized     = Error("Unauthorized")
 	ErrResourceNotFound = Error("Unable to find resource")
 )
 
@@ -18,6 +19,13 @@ const (
 	ErrAdminAlreadyInitialized = Error("An administrator user already exists")
 	ErrCannotRemoveAdmin       = Error("Cannot remove the default administrator account")
 	ErrAdminCannotRemoveSelf   = Error("Cannot remove your own user account. Contact another administrator")
+)
+
+// JWT errors.
+const (
+	ErrSecretGeneration   = Error("Unable to generate secret key")
+	ErrInvalidJWTToken    = Error("Invalid JWT token")
+	ErrMissingContextData = Error("Unable to find JWT data in request context")
 )
 
 // Error represents an application error.
