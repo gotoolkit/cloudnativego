@@ -6,8 +6,8 @@ import (
 
 	"github.com/gotoolkit/cloudnativego/pkg/bolt"
 	"github.com/gotoolkit/cloudnativego/pkg/cloudnativego"
-	"github.com/gotoolkit/cloudnativego/pkg/http"
 	"github.com/gotoolkit/cloudnativego/pkg/jwt"
+	"github.com/gotoolkit/cloudnativego/pkg/server"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -55,7 +55,7 @@ func main() {
 
 	defer store.Close()
 
-	var server cloudnativego.Server = &http.Server{
+	var server cloudnativego.Server = &server.Server{
 		BindAddress: fmt.Sprintf(":%d", spec.Port),
 		UserService: store.UserService,
 		JWTService:  jwtService,
